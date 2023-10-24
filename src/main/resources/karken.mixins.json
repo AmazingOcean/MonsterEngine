@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "com.gitee.karken.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [],
+  "client": [
+    "KarkenPlayerMixin",
+    "KarkenPlayerModelMixin",
+    "MinecraftClientMixin",
+    "KarkenPlayerRenderMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

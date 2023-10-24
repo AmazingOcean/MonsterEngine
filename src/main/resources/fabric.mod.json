@@ -1,0 +1,43 @@
+{
+	"schemaVersion": 1,
+	"id": "monsterengine",
+	"version": "${version}",
+	"name": "MonsterEngine",
+	"description": "This is an example description! Tell everyone what your mod is about!",
+	"authors": [
+		"Me!"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/monsterengine/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			{
+				"value": "com.gitee.monsterengine.MonsterEngine"
+			}
+		],
+		"client": [
+			{
+				"value": "com.gitee.monsterengine.MonsterEngineClient"
+			}
+		]
+	},
+	"mixins": [
+		"monsterengine.mixins.json",
+		"karken.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.14.23",
+		"minecraft": "~1.19.4",
+		"java": ">=17",
+		"fabric-api": "*"
+	},
+	"accessWidener": "monsterengine.accesswidener",
+	"suggests": {
+		"another-mod": "*"
+	}
+}
