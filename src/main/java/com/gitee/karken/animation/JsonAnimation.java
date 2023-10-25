@@ -1,6 +1,6 @@
 package com.gitee.karken.animation;
 
-import com.gitee.karken.serializer.AnimationMetaImpl;
+import com.gitee.karken.animation.serializer.AnimationMetaImpl;
 
 public class JsonAnimation extends AbstractAnimationInstance {
 

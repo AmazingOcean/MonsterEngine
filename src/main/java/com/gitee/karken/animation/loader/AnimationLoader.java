@@ -1,6 +1,6 @@
 package com.gitee.karken.animation.loader;
 
-import com.gitee.karken.serializer.AnimationStructure;
+import com.gitee.karken.animation.serializer.AnimationStructure;
 
 import javax.annotation.Nullable;
 import java.util.Map;

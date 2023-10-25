@@ -1,6 +1,6 @@
-package com.gitee.karken.serializer.json;
+package com.gitee.karken.animation.serializer.json;
 
-import com.gitee.karken.serializer.AnimationMeta;
+import com.gitee.karken.animation.serializer.AnimationMeta;
 import com.google.gson.JsonObject;
 
 public interface JsonAnimationMeta extends AnimationMeta {

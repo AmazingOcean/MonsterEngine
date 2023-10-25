@@ -1,7 +1,7 @@
-package com.gitee.karken.serializer.json;
+package com.gitee.karken.animation.serializer.json;
 
-import com.gitee.karken.serializer.AbstractAnimationStructure;
-import com.gitee.karken.serializer.AnimationMetaImpl;
+import com.gitee.karken.animation.serializer.AbstractAnimationStructure;
+import com.gitee.karken.animation.serializer.AnimationMetaImpl;
 import com.google.gson.JsonObject;
 
 import java.util.HashMap;

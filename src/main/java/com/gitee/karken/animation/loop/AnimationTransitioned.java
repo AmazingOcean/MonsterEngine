@@ -1,12 +1,13 @@
 package com.gitee.karken.animation.loop;
 
+import com.gitee.karken.bone.KarkenBone;
 import com.gitee.karken.vector.KarkenVector3f;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Stack;
 
 public class AnimationTransitioned {
-
-    private float tickDelta;
 
     private Stack<KarkenVector3f> stack = new Stack<>();
 
@@ -19,14 +20,6 @@ public class AnimationTransitioned {
 
     public void push(KarkenVector3f vector3f) {
         stack.push(vector3f);
-    }
-
-    public float getTickDelta() {
-        return tickDelta;
-    }
-
-    public void setTickDelta(float tickDelta) {
-        this.tickDelta = tickDelta;
     }
 
     public Stack<KarkenVector3f> getStack() {

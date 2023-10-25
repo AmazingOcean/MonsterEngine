@@ -4,7 +4,7 @@ import com.gitee.karken.animation.AnimationController;
 import com.gitee.karken.animation.JsonAnimation;
 import com.gitee.karken.animation.loader.DefaultedAnimationLoader;
 import com.gitee.karken.player.KarkenAnimatedHumanoid;
-import com.gitee.karken.serializer.AnimationMetaImpl;
+import com.gitee.karken.animation.serializer.AnimationMetaImpl;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;

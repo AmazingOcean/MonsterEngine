@@ -1,6 +1,6 @@
-package com.gitee.karken.serializer.json;
+package com.gitee.karken.animation.serializer.json;
 
-import com.gitee.karken.serializer.AbstractAnimationMetaBone;
+import com.gitee.karken.animation.serializer.AbstractAnimationMetaBone;
 import com.gitee.karken.vector.KarkenMomentumTicks3f;
 import com.google.gson.JsonObject;
 

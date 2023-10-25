@@ -25,7 +25,7 @@ public abstract class KarkenPlayerRenderMixin extends LivingEntityRenderer<Abstr
     private void applyBodyTransforms(AbstractClientPlayer abstractClientPlayerEntity, PoseStack matrixStack, float f, float bodyYaw, float tickDelta, CallbackInfo ci) {
         KarkenAnimatedHumanoid humanoid = (KarkenAnimatedHumanoid) abstractClientPlayerEntity;
         if (humanoid.getAnimationController().getAnimation() != null) {
-            humanoid.getAnimationController().getAnimation().getTransitioned().setTickDelta(tickDelta);
+            humanoid.getAnimationController().getAnimation().setTickDelta(tickDelta);
         }
 
     }

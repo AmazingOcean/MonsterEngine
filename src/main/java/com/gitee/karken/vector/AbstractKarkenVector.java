@@ -1,5 +1,7 @@
 package com.gitee.karken.vector;
 
+import com.gitee.karken.util.MathHelper;
+
 public abstract class AbstractKarkenVector<T extends Number> implements KarkenVector<T> {
 
     protected T x;
@@ -43,4 +45,6 @@ public abstract class AbstractKarkenVector<T extends Number> implements KarkenVe
     public void setZ(T z) {
         this.z = z;
     }
+
+
 }

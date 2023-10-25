@@ -1,8 +1,7 @@
 package com.gitee.karken.animation;
 
 import com.gitee.karken.bone.KarkenBone;
-import com.gitee.karken.bone.KarkenBoneInstance;
-import com.gitee.karken.serializer.AnimationMetaBone;
+import com.gitee.karken.animation.serializer.AnimationMetaBone;
 
 public interface AnimationController {
 

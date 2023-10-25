@@ -1,6 +1,7 @@
 package com.gitee.karken.mixin;
 
-import com.gitee.karken.animation.loop.AnimationSynchronizer;
+import com.gitee.karken.animation.loop.synchronizer.AnimationSynchronizer;
+import com.gitee.karken.animation.loop.synchronizer.AnimationSynchronizerLoader;
 import com.gitee.karken.bone.MinecraftBoneType;
 import com.gitee.karken.player.KarkenAnimatedHumanoid;
 import net.minecraft.client.model.HumanoidModel;
@@ -10,6 +11,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 
 import java.util.function.Function;
 
@@ -22,16 +24,41 @@ public abstract class KarkenPlayerModelMixin<T extends LivingEntity> extends Hum
 
     @Override
     public void setupAnim(T livingEntity, float f, float g, float h, float i, float j) {
+        this.setDefaultBone();
         super.setupAnim(livingEntity, f, g, h, i, j);
         KarkenAnimatedHumanoid humanoid = getKarkenAnimatedhumanoid(livingEntity);
         for (MinecraftBoneType type : MinecraftBoneType.values()) {
-            AnimationSynchronizer.INSTANCE.update(humanoid,this,type);
+            AnimationSynchronizerLoader.render(humanoid,this,type);
         }
     }
 
-
+    @Unique
+    public void setDefaultBone(){
+        this.leftLeg.setPos(1.9F, 12.0F, 0.0F);
+        this.rightLeg.setPos(- 1.9F, 12.0F, 0.0F);
+        this.head.setPos(0.0F, 0.0F, 0.0F);
+        this.rightArm.z = 0.0F;
+        this.rightArm.x = - 5.0F;
+        this.leftArm.z = 0.0F;
+        this.leftArm.x = 5.0F;
+        this.body.xRot = 0.0F;
+        this.rightLeg.z = 0.1F;
+        this.leftLeg.z = 0.1F;
+        this.rightLeg.y = 12.0F;
+        this.leftLeg.y = 12.0F;
+        this.head.y = 0.0F;
+        this.head.zRot = 0f;
+        this.body.y = 0.0F;
+        this.body.x = 0f;
+        this.body.z = 0f;
+        this.body.yRot = 0;
+        this.body.zRot = 0;
+    }
 
     public KarkenAnimatedHumanoid getKarkenAnimatedhumanoid(LivingEntity entity) {
         return ((KarkenAnimatedHumanoid) entity);
     }
+
+
+
 }

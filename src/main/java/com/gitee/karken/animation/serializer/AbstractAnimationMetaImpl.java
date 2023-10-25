@@ -1,6 +1,4 @@
-package com.gitee.karken.serializer;
-
-import com.gitee.karken.serializer.json.JsonAnimationBone;
+package com.gitee.karken.animation.serializer;
 
 import java.util.Map;
 

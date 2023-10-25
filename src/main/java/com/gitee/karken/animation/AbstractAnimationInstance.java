@@ -1,11 +1,9 @@
 package com.gitee.karken.animation;
 
-import com.gitee.karken.animation.loop.AnimationTransitioned;
 import com.gitee.karken.bone.KarkenBone;
 import com.gitee.karken.bone.KarkenBoneInstance;
-import com.gitee.karken.serializer.AnimationMetaBone;
-import com.gitee.karken.serializer.AnimationMetaImpl;
-import org.jetbrains.annotations.Nullable;
+import com.gitee.karken.animation.serializer.AnimationMetaBone;
+import com.gitee.karken.animation.serializer.AnimationMetaImpl;
 
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -20,7 +18,7 @@ public abstract class AbstractAnimationInstance implements Animation {
 
     private Map<AnimationMetaBone,KarkenBone> boneMap;
 
-    private AnimationTransitioned transitioned = new AnimationTransitioned();
+    private float tickDelta;
 
     public AbstractAnimationInstance(AnimationMetaImpl meta) {
         this.meta = meta;
@@ -39,6 +37,11 @@ public abstract class AbstractAnimationInstance implements Animation {
             karkenBone.getScale().next(this.getTick());
         });
         return quest.next() + 1 < this.getHealth();
+    }
+
+    @Override
+    public float getInterpolation() {
+        return 1f - (float) (getHealth() - getTick()) / getHealth();
     }
 
     @Override
@@ -73,8 +76,13 @@ public abstract class AbstractAnimationInstance implements Animation {
         return null;
     }
 
-    @Override
-    public AnimationTransitioned getTransitioned() {
-        return transitioned;
+
+    public float getTickDelta() {
+        return tickDelta;
     }
+
+    public void setTickDelta(float tickDelta) {
+        this.tickDelta = tickDelta;
+    }
+
 }

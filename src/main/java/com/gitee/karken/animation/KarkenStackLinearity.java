@@ -1,5 +1,6 @@
 package com.gitee.karken.animation;
 
+import com.gitee.karken.animation.loop.AnimationTransitioned;
 import com.gitee.karken.vector.KarkenVector;
 import com.gitee.karken.vector.KarkenVector3f;
 import com.google.common.collect.Maps;
@@ -17,7 +18,8 @@ public class KarkenStackLinearity {
      * 下一帧的动画
      */
     private long select;
-    ;
+
+    private AnimationTransitioned transitioned = new AnimationTransitioned();
 
     public KarkenStackLinearity(Map<Long, KarkenVector3f> vector3fs) {
         this.table.putAll(vector3fs);
@@ -51,4 +53,7 @@ public class KarkenStackLinearity {
         return next(currentTick);
     }
 
+    public AnimationTransitioned getTransitioned() {
+        return transitioned;
+    }
 }

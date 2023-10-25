@@ -21,6 +21,13 @@ public class KarkenMomentumTicks3f {
         System.out.println(this.vector3fs);
     }
 
+    @Override
+    public String toString() {
+        return "KarkenMomentumTicks3f{" +
+                "vector3fs=" + vector3fs +
+                '}';
+    }
+
     public KarkenStackLinearity toKarkenStackLinearity() {
         Map<Long, KarkenVector3f> collect = vector3fs.stream().collect(Collectors.toMap(Element::getTick, Element::getVector3f));
         return new KarkenStackLinearity(collect);

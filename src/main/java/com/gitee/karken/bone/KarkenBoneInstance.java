@@ -1,7 +1,7 @@
 package com.gitee.karken.bone;
 
 import com.gitee.karken.animation.KarkenStackLinearity;
-import com.gitee.karken.serializer.AnimationMetaBone;
+import com.gitee.karken.animation.serializer.AnimationMetaBone;
 
 public class KarkenBoneInstance implements KarkenBone {
 

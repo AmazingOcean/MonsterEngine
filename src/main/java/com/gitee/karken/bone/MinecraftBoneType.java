@@ -1,6 +1,7 @@
 package com.gitee.karken.bone;
 
 import com.gitee.karken.mixin.KarkenPlayerModelMixin;
+import com.gitee.karken.vector.KarkenVector3f;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 
@@ -16,6 +17,10 @@ public enum MinecraftBoneType {
     RIGHT_LEG("right_leg");
 
     private String name;
+
+//    private KarkenVector3f defaultRotation;
+//    private KarkenVector3f defaultScale;
+//    private KarkenVector3f defaultPosition;
 
     MinecraftBoneType(String name) {
         this.name = name;

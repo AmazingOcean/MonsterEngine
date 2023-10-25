@@ -1,4 +1,4 @@
-package com.gitee.karken.serializer;
+package com.gitee.karken.animation.serializer;
 
 import java.util.Map;
 

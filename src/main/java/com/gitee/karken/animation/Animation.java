@@ -11,16 +11,20 @@ public interface Animation {
 
     Lifecycle getLifecycle();
 
+    float getInterpolation();
+
     void setLifecycle(Lifecycle lifecycle);
 
     Long getHealth();
 
     Long getTick();
 
+    float getTickDelta();
+
+    void setTickDelta(float delta);
+
     @Nullable
     KarkenBone getBone(String boneId);
-
-    AnimationTransitioned getTransitioned();
 
     enum Lifecycle {
 
