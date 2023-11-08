@@ -1,7 +1,9 @@
 package com.gitee.karken.core.player;
 
 import com.gitee.karken.core.player.serializer.AnimatedBone;
+import com.gitee.karken.util.vector.KarkenVector3d;
 import com.gitee.karken.util.vector.KarkenVector3f;
+import com.google.common.collect.Lists;
 
 import java.util.List;
 
@@ -9,22 +11,24 @@ public class KarkenAnimatedBone {
 
     private String name;
 
-    private KarkenAnimatedBone parent;
+    private String parent;
 
     private KarkenVector3f rotation;
 
-    private KarkenVector3f position;
+    private KarkenVector3f pivot;
 
-    private KarkenVector3f scale;
+    private KarkenVector3f position = new KarkenVector3f(0f, 0f, 0f);
+
+    private KarkenVector3f scale = new KarkenVector3f(1f, 1f, 1f);
 
     // 子部件
-    private List<KarkenAnimatedBone> children;
+    private List<KarkenAnimatedBone> children = Lists.newArrayList();
 
-    private List<KarkenAnimatedCube> cubes;
+    private List<KarkenAnimatedCube> cubes = Lists.newArrayList();
 
     private float inflation;
 
-    public KarkenAnimatedBone(String name,KarkenAnimatedBone parent, float inflation) {
+    public KarkenAnimatedBone(String name, String parent, float inflation) {
         this.name = name;
         this.parent = parent;
         this.inflation = inflation;
@@ -34,7 +38,13 @@ public class KarkenAnimatedBone {
         return name;
     }
 
-    // 矩形块
+    public KarkenVector3f getPivot() {
+        return pivot;
+    }
+
+    public void setPivot(KarkenVector3f pivot) {
+        this.pivot = pivot;
+    }
 
     public KarkenVector3f getRotation() {
         return rotation;
@@ -76,7 +86,7 @@ public class KarkenAnimatedBone {
         this.cubes = cubes;
     }
 
-    public KarkenAnimatedBone getParent() {
+    public String getParent() {
         return parent;
     }
 
@@ -86,5 +96,20 @@ public class KarkenAnimatedBone {
 
     public void setInflation(float inflation) {
         this.inflation = inflation;
+    }
+
+    @Override
+    public String toString() {
+        return "KarkenAnimatedBone{" +
+                "name='" + name + '\'' +
+                ", parent=" + parent +
+                ", rotation=" + rotation +
+                ", pivot=" + pivot +
+                ", position=" + position +
+                ", scale=" + scale +
+                ", children=" + children +
+                ", cubes=" + cubes +
+                ", inflation=" + inflation +
+                '}';
     }
 }

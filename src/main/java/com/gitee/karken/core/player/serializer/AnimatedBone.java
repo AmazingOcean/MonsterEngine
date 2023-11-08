@@ -11,6 +11,8 @@ public interface AnimatedBone {
 
     String parent();
 
+    KarkenVector3d rotation();
+
     KarkenVector3d pivot();
 
     List<AnimatedCube> cubes();

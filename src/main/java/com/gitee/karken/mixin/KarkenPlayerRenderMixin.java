@@ -3,10 +3,12 @@ package com.gitee.karken.mixin;
 
 import com.gitee.karken.core.animation.AnimationController;
 import com.gitee.karken.core.animation.DefaultAnimationController;
+import com.gitee.karken.core.player.KarkenAnimatedBone;
 import com.gitee.karken.core.player.KarkenAnimatedHumanoid;
 import com.gitee.karken.core.player.KarkenAnimatedModel;
 import com.gitee.karken.core.player.serializer.AnimatedModel;
 import com.gitee.karken.core.player.serializer.AnimatedSerializer;
+import com.gitee.karken.util.KarkenPoseStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
@@ -29,16 +31,24 @@ import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(PlayerRenderer.class)
 public abstract class KarkenPlayerRenderMixin
-        extends LivingEntityRenderer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>>
-        implements KarkenAnimatedHumanoid {
+        extends LivingEntityRenderer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> {
 
     private AnimationController controller = new DefaultAnimationController();
 
-    private KarkenAnimatedModel animatedModel = new KarkenAnimatedModel(AnimatedSerializer.getAnimatedModel("player"));
+    private KarkenAnimatedModel animatedModel;
 
-
-    public KarkenPlayerRenderMixin(EntityRendererProvider.Context context, PlayerModel<AbstractClientPlayer> entityModel, float f) {
+    public KarkenPlayerRenderMixin(EntityRendererProvider.Context context, PlayerModel<AbstractClientPlayer> entityModel, float f) throws IllegalAccessException {
         super(context, entityModel, f);
+    }
+
+    private void prepareRender() {
+        if (animatedModel == null) {
+            try {
+                this.animatedModel = new KarkenAnimatedModel(AnimatedSerializer.getAnimatedModel("player"));
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     @Override
@@ -99,10 +109,17 @@ public abstract class KarkenPlayerRenderMixin
         boolean bl2 = !bl && !clientPlayer.isInvisibleTo(minecraft.player);
         boolean bl3 = minecraft.shouldEntityAppearGlowing(clientPlayer);
         RenderType renderType = this.getRenderType(clientPlayer, bl, bl2, bl3);
-        if (renderType != null) {
-            VertexConsumer vertexConsumer = multiBufferSource.getBuffer(renderType);
-            int p = LivingEntityRenderer.getOverlayCoords(clientPlayer, this.getWhiteOverlayProgress(clientPlayer, partialTick));
-            this.model.renderToBuffer(poseStack, vertexConsumer, packedLight, p, 1.0f, 1.0f, 1.0f, bl2 ? 0.15f : 1.0f);
+//        if (renderType != null) {
+//            VertexConsumer vertexConsumer = multiBufferSource.getBuffer(renderType);
+//            int p = LivingEntityRenderer.getOverlayCoords(clientPlayer, this.getWhiteOverlayProgress(clientPlayer, partialTick));
+//            this.model.renderToBuffer(poseStack, vertexConsumer, packedLight, p, 1.0f, 1.0f, 1.0f, bl2 ? 0.15f : 1.0f);
+//        }
+        prepareRender();
+        // 渲染模型
+        if (renderType != null && animatedModel != null) {
+            int packedOverlay = LivingEntityRenderer.getOverlayCoords(clientPlayer, this.getWhiteOverlayProgress(clientPlayer, partialTick));
+            KarkenAnimatedModel.Properties properties = new KarkenAnimatedModel.Properties(renderType, multiBufferSource, entityYaw, packedOverlay, packedLight, partialTick, 1.0f, 1.0f, 1.0f, bl2 ? 0.15f : 1.0f);
+            animatedModel.render(clientPlayer, properties, new KarkenPoseStack(poseStack));
         }
         if (!((Entity) clientPlayer).isSpectator()) {
             for (RenderLayer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> renderLayer : this.layers) {
@@ -116,10 +133,6 @@ public abstract class KarkenPlayerRenderMixin
         this.renderNameTag(clientPlayer, clientPlayer.getDisplayName(), poseStack, multiBufferSource, packedLight);
     }
 
-    private void renderKarkenModel(AbstractClientPlayer clientPlayer, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource multiBufferSource, int packedLight) {
-
-
-    }
 
     //    @Inject(method = "setupRotations(Lnet/minecraft/client/player/AbstractClientPlayer;Lcom/mojang/blaze3d/vertex/PoseStack;FFF)V", at = @At("RETURN"))
 //    private void applyBodyTransforms(AbstractClientPlayer abstractClientPlayerEntity, PoseStack matrixStack, float f, float bodyYaw, float tickDelta, CallbackInfo ci) {
@@ -129,4 +142,5 @@ public abstract class KarkenPlayerRenderMixin
 //        }
 //
 //    }
+
 }

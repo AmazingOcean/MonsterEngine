@@ -13,13 +13,13 @@ public class KarkenAnimatedCube {
 
     private EnumMap<Direction,KarkenQuad> karkenQuads;
 
-    private KarkenVector3d pivot;
+    private KarkenVector3f pivot;
 
-    private KarkenVector3d rotation;
+    private KarkenVector3f rotation;
 
-    private KarkenVector3d size;
+    private KarkenVector3f size;
 
-    public KarkenAnimatedCube(EnumMap<Direction, KarkenQuad> karkenQuads, KarkenVector3d pivot, KarkenVector3d rotation, KarkenVector3d size) {
+    public KarkenAnimatedCube(EnumMap<Direction, KarkenQuad> karkenQuads, KarkenVector3f pivot, KarkenVector3f rotation, KarkenVector3f size) {
         this.karkenQuads = karkenQuads;
         this.pivot = pivot;
         this.rotation = rotation;
@@ -30,27 +30,27 @@ public class KarkenAnimatedCube {
         return karkenQuads;
     }
 
-    public KarkenVector3d getPivot() {
+    public KarkenVector3f getPivot() {
         return pivot;
     }
 
-    public void setPivot(KarkenVector3d pivot) {
+    public void setPivot(KarkenVector3f pivot) {
         this.pivot = pivot;
     }
 
-    public KarkenVector3d getRotation() {
+    public KarkenVector3f getRotation() {
         return rotation;
     }
 
-    public void setRotation(KarkenVector3d rotation) {
+    public void setRotation(KarkenVector3f rotation) {
         this.rotation = rotation;
     }
 
-    public KarkenVector3d getSize() {
+    public KarkenVector3f getSize() {
         return size;
     }
 
-    public void setSize(KarkenVector3d size) {
+    public void setSize(KarkenVector3f size) {
         this.size = size;
     }
 }

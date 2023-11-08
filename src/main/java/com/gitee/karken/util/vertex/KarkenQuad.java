@@ -59,8 +59,9 @@ public class KarkenQuad {
 
     public static float DEFAULT_TEXTURE_HEIGHT = 256;
 
-    public static KarkenQuad build(KarkenVertexSet vertexSet, AnimatedCube cube, AnimatedUV uv, Direction direction) {
+    public static KarkenQuad build(KarkenVertexSet vertexSet, AnimatedCube cube, Direction direction) {
         // 渲染盒子块
+        AnimatedUV uv = cube.uv();
         if (uv instanceof AnimatedUV.Box) {
             return buildBox(vertexSet, cube, direction);
         }

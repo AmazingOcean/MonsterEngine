@@ -44,5 +44,9 @@ public class KarkenVector3d extends AbstractKarkenVector<Double> {
         return new KarkenVector3d(Math.floor(this.getX()), Math.floor(this.getY()), Math.floor(this.getZ()));
     }
 
+    public KarkenVector3f getKarkenVector3f() {
+        return new KarkenVector3f(getX(), getY(), getZ());
+    }
+
 
 }

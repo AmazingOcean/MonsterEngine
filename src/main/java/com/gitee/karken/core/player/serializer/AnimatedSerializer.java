@@ -24,11 +24,10 @@ public class AnimatedSerializer {
     public static void register(ResourceLocation resourceLocation, AnimatedModel model) {
         map.put(resourceLocation, model);
         System.out.println("[AnimatedSerializer] load " + resourceLocation + " model " + model);
-
     }
 
     public static AnimatedModel getAnimatedModel(String id) {
-        String path = "models/entity" + id + ".geo.json";
+        String path = "models/entity/" + id + ".geo.json";
         ResourceLocation location = new ResourceLocation(MonsterEngine.MOD_ID, path);
         return map.get(location);
     }

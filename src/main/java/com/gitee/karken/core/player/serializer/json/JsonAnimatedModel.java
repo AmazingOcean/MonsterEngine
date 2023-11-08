@@ -36,7 +36,7 @@ public class JsonAnimatedModel implements AnimatedModel {
 
     @Override
     public List<AnimatedBone> bones() {
-        return null;
+        return bones;
     }
 
     @Override

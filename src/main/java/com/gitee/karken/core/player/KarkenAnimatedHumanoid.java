@@ -6,7 +6,7 @@ import com.gitee.karken.core.player.serializer.AnimatedModel;
 
 public interface KarkenAnimatedHumanoid {
 
-    AnimatedModel getAnimatedModel();
+    KarkenAnimatedModel getAnimatedModel();
 
     AnimationController getAnimationController();
 

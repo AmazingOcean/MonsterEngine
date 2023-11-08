@@ -21,6 +21,8 @@ public class JsonAnimatedBone implements AnimatedBone {
 
     private KarkenVector3d pivot;
 
+    private KarkenVector3d rotation;
+
     private KarkenVector3d size;
 
     private List<AnimatedCube> cubes = Lists.newArrayList();
@@ -34,6 +36,7 @@ public class JsonAnimatedBone implements AnimatedBone {
         this.name = object.getString("name");
         this.pivot = object.getArray("pivot").getKarkenVector3d();
         this.size = object.getArray("size").getKarkenVector3d();
+        this.rotation = object.getArray("rotation").getKarkenVector3d();
         this.mirror = object.get("mirror").getBoolean();
         for (KarkenJsonElement cube : object.getArray("cubes").getValues()) {
             this.cubes.add(new JsonAnimatedCube(cube.getObject()));
@@ -53,6 +56,11 @@ public class JsonAnimatedBone implements AnimatedBone {
     @Override
     public KarkenVector3d pivot() {
         return pivot;
+    }
+
+    @Override
+    public KarkenVector3d rotation() {
+        return rotation;
     }
 
     @Override
