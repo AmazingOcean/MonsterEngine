@@ -1,8 +1,7 @@
 package com.gitee.karken;
 
-import com.gitee.karken.animation.KarkenStackLinearity;
-import com.gitee.karken.vector.KarkenVector3f;
-import com.google.common.collect.Maps;
+import com.gitee.karken.core.animation.KarkenStackLinearity;
+import com.gitee.karken.util.vector.KarkenVector3f;
 
 import java.util.HashMap;
 import java.util.Map;

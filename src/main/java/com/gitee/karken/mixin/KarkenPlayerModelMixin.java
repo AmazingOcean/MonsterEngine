@@ -1,9 +1,8 @@
 package com.gitee.karken.mixin;
 
-import com.gitee.karken.animation.loop.synchronizer.AnimationSynchronizer;
-import com.gitee.karken.animation.loop.synchronizer.AnimationSynchronizerLoader;
-import com.gitee.karken.bone.MinecraftBoneType;
-import com.gitee.karken.player.KarkenAnimatedHumanoid;
+import com.gitee.karken.core.animation.loop.synchronizer.AnimationSynchronizerLoader;
+import com.gitee.karken.core.player.bone.MinecraftBoneType;
+import com.gitee.karken.core.player.KarkenAnimatedHumanoid;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelPart;
@@ -18,19 +17,22 @@ import java.util.function.Function;
 @Mixin(PlayerModel.class)
 public abstract class KarkenPlayerModelMixin<T extends LivingEntity> extends HumanoidModel<T> {
 
+
+
     public KarkenPlayerModelMixin(ModelPart modelPart, Function<ResourceLocation, RenderType> function) {
         super(modelPart, function);
+        System.out.println("[KarkenPlayerModelMixin] ===========");
     }
 
-    @Override
-    public void setupAnim(T livingEntity, float f, float g, float h, float i, float j) {
-        this.setDefaultBone();
-        super.setupAnim(livingEntity, f, g, h, i, j);
-        KarkenAnimatedHumanoid humanoid = getKarkenAnimatedhumanoid(livingEntity);
-        for (MinecraftBoneType type : MinecraftBoneType.values()) {
-            AnimationSynchronizerLoader.render(humanoid,this,type);
-        }
-    }
+//    @Override
+//    public void setupAnim(T livingEntity, float f, float g, float h, float i, float j) {
+//        this.setDefaultBone();
+//        super.setupAnim(livingEntity, f, g, h, i, j);
+//        KarkenAnimatedHumanoid humanoid = getKarkenAnimatedhumanoid(livingEntity);
+//        for (MinecraftBoneType type : MinecraftBoneType.values()) {
+//            AnimationSynchronizerLoader.render(humanoid,this,type);
+//        }
+//    }
 
     @Unique
     public void setDefaultBone(){
@@ -53,10 +55,6 @@ public abstract class KarkenPlayerModelMixin<T extends LivingEntity> extends Hum
         this.body.z = 0f;
         this.body.yRot = 0;
         this.body.zRot = 0;
-    }
-
-    public KarkenAnimatedHumanoid getKarkenAnimatedhumanoid(LivingEntity entity) {
-        return ((KarkenAnimatedHumanoid) entity);
     }
 
 

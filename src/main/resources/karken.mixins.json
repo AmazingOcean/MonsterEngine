@@ -5,8 +5,8 @@
   "mixins": [],
   "client": [
     "KarkenPlayerMixin",
-    "KarkenPlayerModelMixin",
     "MinecraftClientMixin",
+    "KarkenPlayerModelMixin",
     "KarkenPlayerRenderMixin"
   ],
   "injectors": {

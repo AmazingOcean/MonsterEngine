@@ -1,7 +1,7 @@
 package com.gitee.monsterengine;
 
-import com.gitee.karken.animation.loader.DefaultedAnimationLoader;
-import com.gitee.karken.animation.serializer.json.JsonAnimationHelper;
+import com.gitee.karken.core.animation.loader.DefaultedAnimationLoader;
+import com.gitee.karken.core.animation.serializer.json.JsonAnimationHelper;
 import net.fabricmc.api.ClientModInitializer;
 
 public class MonsterEngineClient implements ClientModInitializer {
