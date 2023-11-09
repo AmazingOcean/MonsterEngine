@@ -6,6 +6,7 @@ import com.gitee.karken.core.player.serializer.AnimatedModel;
 import com.gitee.karken.util.KarkenMatrix3f;
 import com.gitee.karken.util.KarkenMatrix4f;
 import com.gitee.karken.util.KarkenPoseStack;
+import com.gitee.karken.util.MathHelper;
 import com.gitee.karken.util.vector.KarkenVector3d;
 import com.gitee.karken.util.vector.KarkenVector3f;
 import com.gitee.karken.util.vertex.KarkenQuad;
@@ -74,9 +75,9 @@ public class KarkenAnimatedModel {
     public void renderBone(KarkenPoseStack poseStack, KarkenAnimatedBone animatedBone, Properties properties) {
         poseStack.pushPose();
         // 平移到局部部件原点
-        poseStack.translate(animatedBone.getPosition().negationX().multiply(16f));
+        poseStack.translate(animatedBone.getPosition().negationX().multiply(MathHelper.DEFAULT_SCALE_F));
         // 再次平移到pivot点
-        poseStack.translate(animatedBone.getPivot().multiply(16f));
+        poseStack.translate(animatedBone.getPivot().multiply(MathHelper.DEFAULT_SCALE_F));
         // 旋转
         if (animatedBone.getRotation().getZ() != 0f)
             poseStack.mulPose(animatedBone.getRotation().axisRotationZ());
@@ -88,7 +89,7 @@ public class KarkenAnimatedModel {
         // 缩放模型矩阵
         poseStack.scale(animatedBone.getScale());
         // 平移回来
-        poseStack.translate(animatedBone.getPivot().negation().multiply(16f));
+        poseStack.translate(animatedBone.getPivot().negation().multiply(MathHelper.DEFAULT_SCALE_F));
         // 渲染矩形
         for (KarkenAnimatedCube animatedCube : animatedBone.getCubes()) {
             poseStack.pushPose();
@@ -107,14 +108,14 @@ public class KarkenAnimatedModel {
 
         System.out.println(animatedCube);
         // 平移到立方体的位置
-        poseStack.translate(animatedCube.getPivot().multiply(16f));
+        poseStack.translate(animatedCube.getPivot().multiply(MathHelper.DEFAULT_SCALE_F));
         // 处理旋转
         KarkenVector3f rotation = animatedCube.getRotation();
         poseStack.mulPose(rotation.rotationXYZ(0, 0, rotation.getZ()));
         poseStack.mulPose(rotation.rotationXYZ(0, rotation.getY(), 0));
         poseStack.mulPose(rotation.rotationXYZ(rotation.getX(), 0, 0));
         // 平移回来
-        poseStack.translate(animatedCube.getPivot().negation().multiply(16f));
+        poseStack.translate(animatedCube.getPivot().negation().multiply(MathHelper.DEFAULT_SCALE_F));
         KarkenMatrix3f normalisedPoseState = poseStack.last().getNormal();
         KarkenMatrix4f poseState = poseStack.last().getPose().clone();
         for (Map.Entry<Direction, KarkenQuad> entry : animatedCube.getKarkenQuads().entrySet()) {
@@ -131,7 +132,7 @@ public class KarkenAnimatedModel {
     private void renderQuad(KarkenQuad quad, KarkenMatrix4f poseState, KarkenVector3f normal, Properties properties) {
         VertexConsumer buffer = properties.buffer;
         for (KarkenVertex vertex : quad.getVertices()) {
-            Vector4f vector4f = poseState.transform(vertex.getPosition().multiply(16.0));
+            Vector4f vector4f = poseState.transform(vertex.getPosition());
             buffer.vertex(vector4f.x, vector4f.y, vector4f.z)
                     .color(properties.red, properties.green, properties.blue, properties.alpha)
                     .overlayCoords(properties.packedOverlay)
@@ -165,8 +166,8 @@ public class KarkenAnimatedModel {
         KarkenVector3f rotation = cube.rotation().getKarkenVector3f();
         KarkenVector3f pivot = cube.pivot().multiply(-1, 1, 1).getKarkenVector3f();
         // 重新赋值
-        origin = new KarkenVector3d(-(origin.getX() + size.getX()) / 16f, origin.getY() / 16f, origin.getZ() / 16f);
-        KarkenVector3d vertexSize = size.multiply(1 / 16f).getKarkenVector3d();
+        origin = new KarkenVector3d(-(origin.getX() + size.getX()), origin.getY(), origin.getZ()).multiply(MathHelper.DEFAULT_SCALE_D);
+        KarkenVector3d vertexSize = size.multiply(MathHelper.DEFAULT_SCALE_F).getKarkenVector3d();
         rotation = new KarkenVector3f(Math.toRadians(-rotation.getX()), Math.toRadians(-rotation.getY()), Math.toRadians(rotation.getZ()));
 
         return new KarkenAnimatedCube(createKarkenQuadEnumMap(cube, new KarkenVertexSet(origin, vertexSize, cube.inflate())), pivot, rotation, size);
@@ -192,11 +193,17 @@ public class KarkenAnimatedModel {
     }
 
     public List<KarkenAnimatedBone> getTopAnimationBones() {
-        return getBones().stream().filter(animatedBone -> animatedBone.getParent() == null).collect(Collectors.toList());
+        return getBones()
+                .stream()
+                .filter(animatedBone -> Objects.isNull(animatedBone.getParent()))
+                .collect(Collectors.toList());
     }
 
     public List<KarkenAnimatedBone> getBonesWithParent(KarkenAnimatedBone bone) {
-        return getBones().stream().filter(animatedBone -> Objects.equals(animatedBone.getParent(), bone.getParent())).collect(Collectors.toList());
+        return getBones()
+                .stream()
+                .filter(animatedBone -> Objects.equals(animatedBone.getParent(), bone.getName()))
+                .collect(Collectors.toList());
     }
 
     public static class Properties {

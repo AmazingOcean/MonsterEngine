@@ -7,6 +7,10 @@ import org.joml.Vector4f;
 
 public class MathHelper {
 
+    public static final float DEFAULT_SCALE_F = 1f / 16f;
+
+    public static final double DEFAULT_SCALE_D = 1D / 16D;
+
     // 实现基本的线性插值
     public static float lerp(float start, float end, float delta) {
         return start + delta * (end - start);
