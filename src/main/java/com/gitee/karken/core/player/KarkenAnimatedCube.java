@@ -53,4 +53,14 @@ public class KarkenAnimatedCube {
     public void setSize(KarkenVector3f size) {
         this.size = size;
     }
+
+    @Override
+    public String toString() {
+        return "KarkenAnimatedCube{" +
+                "karkenQuads=" + karkenQuads +
+                ", pivot=" + pivot +
+                ", rotation=" + rotation +
+                ", size=" + size +
+                '}';
+    }
 }

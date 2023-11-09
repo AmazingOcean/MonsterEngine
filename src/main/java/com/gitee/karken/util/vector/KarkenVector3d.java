@@ -48,5 +48,12 @@ public class KarkenVector3d extends AbstractKarkenVector<Double> {
         return new KarkenVector3f(getX(), getY(), getZ());
     }
 
-
+    @Override
+    public String toString() {
+        return "KarkenVector3d{" +
+                "x=" + x +
+                ", y=" + y +
+                ", z=" + z +
+                '}';
+    }
 }

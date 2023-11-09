@@ -55,59 +55,60 @@ public abstract class KarkenPlayerRenderMixin
     public void render(AbstractClientPlayer clientPlayer, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource multiBufferSource, int packedLight) {
         Direction direction;
         poseStack.pushPose();
-        this.model.attackTime = this.getAttackAnim(clientPlayer, partialTick);
-        this.model.riding = clientPlayer.isPassenger();
-        this.model.young = clientPlayer.isBaby();
-        float lerpBodyRot = Mth.rotLerp(partialTick, clientPlayer.yBodyRotO, clientPlayer.yBodyRot);
-        float lerpHeadRot = Mth.rotLerp(partialTick, clientPlayer.yHeadRotO, clientPlayer.yHeadRot);
-        float netHeadYaw = lerpHeadRot - lerpBodyRot;
-        if (clientPlayer.isPassenger() && clientPlayer.getVehicle() instanceof LivingEntity entity) {
-            lerpBodyRot = Mth.rotLerp(partialTick, entity.yBodyRotO, entity.yBodyRot);
-            netHeadYaw = lerpHeadRot - lerpBodyRot;
-            float clampedHeadYaw = Mth.clamp(Mth.wrapDegrees(netHeadYaw), -85, 85);
-            ;
-            lerpBodyRot = lerpHeadRot - clampedHeadYaw;
-
-            if (clampedHeadYaw * clampedHeadYaw > 2500.0f) {
-                lerpBodyRot += clampedHeadYaw * 0.2f;
-            }
-
-            netHeadYaw = lerpHeadRot - lerpBodyRot;
-        }
-
-        float headPitch = Mth.lerp(partialTick, clientPlayer.xRotO, clientPlayer.getXRot());
-        if (LivingEntityRenderer.isEntityUpsideDown(clientPlayer)) {
-            headPitch *= -1.0f;
-            netHeadYaw *= -1.0f;
-        }
-        // 如果是睡觉的状态
-        if (clientPlayer.hasPose(Pose.SLEEPING) && (direction = clientPlayer.getBedOrientation()) != null) {
-            float eyePosOffset = clientPlayer.getEyeHeight(Pose.STANDING) - 0.1F;
-            poseStack.translate((float) (-direction.getStepX()) * eyePosOffset, 0.0f, (float) (-direction.getStepZ()) * eyePosOffset);
-        }
-        float ageInTicks = this.getBob(clientPlayer, partialTick);
-        this.setupRotations(clientPlayer, poseStack, ageInTicks, lerpBodyRot, partialTick);
-        poseStack.scale(-1.0f, -1.0f, 1.0f);
-        this.scale(clientPlayer, poseStack, partialTick);
-        poseStack.translate(0.0f, -1.501f, 0.0f);
-        float limbSwingAmount = 0.0f;
-        float limbSwing = 0.0f;
-        if (!clientPlayer.isPassenger() && clientPlayer.isAlive()) {
-            limbSwingAmount = clientPlayer.walkAnimation.speed(partialTick);
-            limbSwing = clientPlayer.walkAnimation.position(partialTick);
-            if (clientPlayer.isBaby()) {
-                limbSwing *= 3.0f;
-            }
-            if (limbSwingAmount > 1.0f) {
-                limbSwingAmount = 1.0f;
-            }
-        }
-        this.model.prepareMobModel(clientPlayer, limbSwing, limbSwingAmount, partialTick);
-        this.model.setupAnim(clientPlayer, limbSwing, limbSwingAmount, limbSwingAmount, netHeadYaw, headPitch);
+//        this.model.attackTime = this.getAttackAnim(clientPlayer, partialTick);
+//        this.model.riding = clientPlayer.isPassenger();
+//        this.model.young = clientPlayer.isBaby();
+//        float lerpBodyRot = Mth.rotLerp(partialTick, clientPlayer.yBodyRotO, clientPlayer.yBodyRot);
+//        float lerpHeadRot = Mth.rotLerp(partialTick, clientPlayer.yHeadRotO, clientPlayer.yHeadRot);
+//        float netHeadYaw = lerpHeadRot - lerpBodyRot;
+//        if (clientPlayer.isPassenger() && clientPlayer.getVehicle() instanceof LivingEntity entity) {
+//            lerpBodyRot = Mth.rotLerp(partialTick, entity.yBodyRotO, entity.yBodyRot);
+//            netHeadYaw = lerpHeadRot - lerpBodyRot;
+//            float clampedHeadYaw = Mth.clamp(Mth.wrapDegrees(netHeadYaw), -85, 85);
+//            ;
+//            lerpBodyRot = lerpHeadRot - clampedHeadYaw;
+//
+//            if (clampedHeadYaw * clampedHeadYaw > 2500.0f) {
+//                lerpBodyRot += clampedHeadYaw * 0.2f;
+//            }
+//
+//            netHeadYaw = lerpHeadRot - lerpBodyRot;
+//        }
+//
+//        float headPitch = Mth.lerp(partialTick, clientPlayer.xRotO, clientPlayer.getXRot());
+//        if (LivingEntityRenderer.isEntityUpsideDown(clientPlayer)) {
+//            headPitch *= -1.0f;
+//            netHeadYaw *= -1.0f;
+//        }
+//        // 如果是睡觉的状态
+//        if (clientPlayer.hasPose(Pose.SLEEPING) && (direction = clientPlayer.getBedOrientation()) != null) {
+//            float eyePosOffset = clientPlayer.getEyeHeight(Pose.STANDING) - 0.1F;
+//            poseStack.translate((float) (-direction.getStepX()) * eyePosOffset, 0.0f, (float) (-direction.getStepZ()) * eyePosOffset);
+//        }
+//        float ageInTicks = this.getBob(clientPlayer, partialTick);
+//        this.setupRotations(clientPlayer, poseStack, ageInTicks, lerpBodyRot, partialTick);
+//        poseStack.scale(-1.0f, -1.0f, 1.0f);
+//        this.scale(clientPlayer, poseStack, partialTick);
+//        poseStack.translate(0.0f, -1.501f, 0.0f);
+//        float limbSwingAmount = 0.0f;
+//        float limbSwing = 0.0f;
+//        if (!clientPlayer.isPassenger() && clientPlayer.isAlive()) {
+//            limbSwingAmount = clientPlayer.walkAnimation.speed(partialTick);
+//            limbSwing = clientPlayer.walkAnimation.position(partialTick);
+//            if (clientPlayer.isBaby()) {
+//                limbSwing *= 3.0f;
+//            }
+//            if (limbSwingAmount > 1.0f) {
+//                limbSwingAmount = 1.0f;
+//            }
+//        }
+//        this.model.prepareMobModel(clientPlayer, limbSwing, limbSwingAmount, partialTick);
+//        this.model.setupAnim(clientPlayer, limbSwing, limbSwingAmount, limbSwingAmount, netHeadYaw, headPitch);
         Minecraft minecraft = Minecraft.getInstance();
         boolean bl = this.isBodyVisible(clientPlayer);
         boolean bl2 = !bl && !clientPlayer.isInvisibleTo(minecraft.player);
         boolean bl3 = minecraft.shouldEntityAppearGlowing(clientPlayer);
+        float alpha = bl2 ? 0.15f : 1.0f;
         RenderType renderType = this.getRenderType(clientPlayer, bl, bl2, bl3);
 //        if (renderType != null) {
 //            VertexConsumer vertexConsumer = multiBufferSource.getBuffer(renderType);
@@ -118,19 +119,19 @@ public abstract class KarkenPlayerRenderMixin
         // 渲染模型
         if (renderType != null && animatedModel != null) {
             int packedOverlay = LivingEntityRenderer.getOverlayCoords(clientPlayer, this.getWhiteOverlayProgress(clientPlayer, partialTick));
-            KarkenAnimatedModel.Properties properties = new KarkenAnimatedModel.Properties(renderType, multiBufferSource, entityYaw, packedOverlay, packedLight, partialTick, 1.0f, 1.0f, 1.0f, bl2 ? 0.15f : 1.0f);
+            KarkenAnimatedModel.Properties properties = new KarkenAnimatedModel.Properties(renderType, multiBufferSource, entityYaw, packedOverlay, packedLight, partialTick, 1.0f, 1.0f, 1.0f, alpha);
             animatedModel.render(clientPlayer, properties, new KarkenPoseStack(poseStack));
         }
-        if (!((Entity) clientPlayer).isSpectator()) {
-            for (RenderLayer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> renderLayer : this.layers) {
-                renderLayer.render(poseStack, multiBufferSource, packedLight, clientPlayer, limbSwing, limbSwingAmount, partialTick, ageInTicks, netHeadYaw, headPitch);
-            }
-        }
+//        if (!((Entity) clientPlayer).isSpectator()) {
+//            for (RenderLayer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> renderLayer : this.layers) {
+//                renderLayer.render(poseStack, multiBufferSource, packedLight, clientPlayer, limbSwing, limbSwingAmount, partialTick, ageInTicks, netHeadYaw, headPitch);
+//            }
+//        }
         poseStack.popPose();
-        if (!this.shouldShowName(clientPlayer)) {
-            return;
-        }
-        this.renderNameTag(clientPlayer, clientPlayer.getDisplayName(), poseStack, multiBufferSource, packedLight);
+//        if (!this.shouldShowName(clientPlayer)) {
+//            return;
+//        }
+//        this.renderNameTag(clientPlayer, clientPlayer.getDisplayName(), poseStack, multiBufferSource, packedLight);
     }
 
 

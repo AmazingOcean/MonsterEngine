@@ -39,4 +39,11 @@ public class KarkenVertex {
         return new KarkenVertex(position, new AnimatedUV.Box(u, v));
     }
 
+    @Override
+    public String toString() {
+        return "KarkenVertex{" +
+                "position=" + position +
+                ", animatedUV=" + animatedUV +
+                '}';
+    }
 }

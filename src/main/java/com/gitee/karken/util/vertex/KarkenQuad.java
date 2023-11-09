@@ -6,6 +6,8 @@ import com.gitee.karken.util.vector.KarkenVector3d;
 import com.gitee.karken.util.vector.KarkenVector3f;
 import net.minecraft.core.Direction;
 
+import java.util.Arrays;
+
 /**
  * 表示一个四边形
  */
@@ -118,5 +120,12 @@ public class KarkenQuad {
         };
     }
 
-
+    @Override
+    public String toString() {
+        return "KarkenQuad{" +
+                "vertices=" + Arrays.toString(vertices) +
+                ", normal=" + normal +
+                ", direction=" + direction +
+                '}';
+    }
 }

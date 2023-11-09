@@ -21,7 +21,7 @@ public class KarkenPoseStack {
     }
 
     public KarkenPoseStack translate(KarkenVector3f vector3f) {
-        return thenAccept(() -> poseStack.translate(vector3f.getX(), vector3f.getX(), vector3f.getZ()));
+        return thenAccept(() -> poseStack.translate(vector3f.getX(), vector3f.getY(), vector3f.getZ()));
     }
 
     public KarkenPoseStack mulPose(Quaternionf quaternionf) {
@@ -30,6 +30,10 @@ public class KarkenPoseStack {
 
     public KarkenPoseStack scale(KarkenVector3f vector3f) {
         return thenAccept(() -> poseStack.scale(vector3f.getX(), vector3f.getY(), vector3f.getZ()));
+    }
+
+    public PoseStack getInstance() {
+        return poseStack;
     }
 
 

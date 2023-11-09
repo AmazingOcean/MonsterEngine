@@ -121,4 +121,8 @@ public class KarkenVector3f extends AbstractKarkenVector<Float> {
         return normal;
     }
 
+    public boolean isZero() {
+        return x == 0f && y == 0f && z == 0f;
+    }
+
 }

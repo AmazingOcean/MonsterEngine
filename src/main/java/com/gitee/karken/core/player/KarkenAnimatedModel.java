@@ -6,7 +6,6 @@ import com.gitee.karken.core.player.serializer.AnimatedModel;
 import com.gitee.karken.util.KarkenMatrix3f;
 import com.gitee.karken.util.KarkenMatrix4f;
 import com.gitee.karken.util.KarkenPoseStack;
-import com.gitee.karken.util.vector.KarkenVector;
 import com.gitee.karken.util.vector.KarkenVector3d;
 import com.gitee.karken.util.vector.KarkenVector3f;
 import com.gitee.karken.util.vertex.KarkenQuad;
@@ -16,22 +15,23 @@ import com.gitee.monsterengine.MonsterEngine;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
-import org.joml.Matrix3f;
-import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class KarkenAnimatedModel {
 
@@ -48,13 +48,25 @@ public class KarkenAnimatedModel {
 
     private final ResourceLocation TEXTURE_RESOURCE_LOCATION = new ResourceLocation(MonsterEngine.MOD_ID, "textures/entity/player.png");
 
+    public static LayerDefinition createBodyLayer() {
+        MeshDefinition meshDefinition = new MeshDefinition();
+        PartDefinition root = meshDefinition.getRoot();
+        root.addOrReplaceChild("ball",
+                CubeListBuilder.create().addBox(-4, 0, -4, 8, 8, 8),
+                PartPose.offset(0, 16, 0)
+        );
+        return LayerDefinition.create(meshDefinition, 32, 16);
+    }
+
     /**
      * render
      */
     public void render(AbstractClientPlayer clientPlayer, Properties properties, KarkenPoseStack poseStack) {
         AbstractTexture texture = Minecraft.getInstance().getTextureManager().getTexture(TEXTURE_RESOURCE_LOCATION);
         RenderSystem.setShaderTexture(0, texture.getId());
-        for (KarkenAnimatedBone animatedBone : getBones()) {
+
+
+        for (KarkenAnimatedBone animatedBone : getTopAnimationBones()) {
             renderBone(poseStack, animatedBone, properties);
         }
     }
@@ -66,23 +78,34 @@ public class KarkenAnimatedModel {
         // 再次平移到pivot点
         poseStack.translate(animatedBone.getPivot().multiply(16f));
         // 旋转
-        if (animatedBone.getRotation().getX() != 0f) poseStack.mulPose(animatedBone.getRotation().axisRotationX());
-        if (animatedBone.getRotation().getY() != 0f) poseStack.mulPose(animatedBone.getRotation().axisRotationY());
-        if (animatedBone.getRotation().getZ() != 0f) poseStack.mulPose(animatedBone.getRotation().axisRotationZ());
+        if (animatedBone.getRotation().getZ() != 0f)
+            poseStack.mulPose(animatedBone.getRotation().axisRotationZ());
+        if (animatedBone.getRotation().getY() != 0f)
+            poseStack.mulPose(animatedBone.getRotation().axisRotationY());
+        if (animatedBone.getRotation().getX() != 0f)
+            poseStack.mulPose(animatedBone.getRotation().axisRotationX());
+
         // 缩放模型矩阵
         poseStack.scale(animatedBone.getScale());
         // 平移回来
-        poseStack.translate(animatedBone.getPivot().negationX().multiply(16f));
+        poseStack.translate(animatedBone.getPivot().negation().multiply(16f));
         // 渲染矩形
         for (KarkenAnimatedCube animatedCube : animatedBone.getCubes()) {
+            poseStack.pushPose();
             renderCube(poseStack, animatedCube, properties);
+            poseStack.popPose();
+        }
+
+        for (KarkenAnimatedBone karkenAnimatedBone : getBonesWithParent(animatedBone)) {
+            renderBone(poseStack,karkenAnimatedBone,properties);
         }
 
         poseStack.popPose();
     }
 
     public void renderCube(KarkenPoseStack poseStack, KarkenAnimatedCube animatedCube, Properties properties) {
-        poseStack.pushPose();
+
+        System.out.println(animatedCube);
         // 平移到立方体的位置
         poseStack.translate(animatedCube.getPivot().multiply(16f));
         // 处理旋转
@@ -94,7 +117,6 @@ public class KarkenAnimatedModel {
         poseStack.translate(animatedCube.getPivot().negation().multiply(16f));
         KarkenMatrix3f normalisedPoseState = poseStack.last().getNormal();
         KarkenMatrix4f poseState = poseStack.last().getPose().clone();
-
         for (Map.Entry<Direction, KarkenQuad> entry : animatedCube.getKarkenQuads().entrySet()) {
             Direction direction = entry.getKey();
             KarkenQuad value = entry.getValue();
@@ -103,14 +125,13 @@ public class KarkenAnimatedModel {
             renderQuad(value, poseState, normal, properties);
         }
 
-        poseStack.popPose();
     }
 
     // 渲染一个面
     private void renderQuad(KarkenQuad quad, KarkenMatrix4f poseState, KarkenVector3f normal, Properties properties) {
         VertexConsumer buffer = properties.buffer;
         for (KarkenVertex vertex : quad.getVertices()) {
-            Vector4f vector4f = poseState.transform(vertex.getPosition());
+            Vector4f vector4f = poseState.transform(vertex.getPosition().multiply(16.0));
             buffer.vertex(vector4f.x, vector4f.y, vector4f.z)
                     .color(properties.red, properties.green, properties.blue, properties.alpha)
                     .overlayCoords(properties.packedOverlay)
@@ -120,7 +141,6 @@ public class KarkenAnimatedModel {
 
         }
     }
-
 
     private KarkenAnimatedBone createKarkenAnimatedBone(AnimatedModel model, KarkenAnimatedBone parent, AnimatedBone bone) {
         KarkenAnimatedBone karkenAnimatedBone = new KarkenAnimatedBone(bone.name(), parent != null ? parent.getName() : null, bone.inflation());
@@ -171,6 +191,14 @@ public class KarkenAnimatedModel {
         return bones;
     }
 
+    public List<KarkenAnimatedBone> getTopAnimationBones() {
+        return getBones().stream().filter(animatedBone -> animatedBone.getParent() == null).collect(Collectors.toList());
+    }
+
+    public List<KarkenAnimatedBone> getBonesWithParent(KarkenAnimatedBone bone) {
+        return getBones().stream().filter(animatedBone -> Objects.equals(animatedBone.getParent(), bone.getParent())).collect(Collectors.toList());
+    }
+
     public static class Properties {
 
         RenderType renderType;
@@ -179,9 +207,9 @@ public class KarkenAnimatedModel {
 
         VertexConsumer buffer;
 
-        int packedOverlay;
-
         float entityYaw;
+
+        int packedOverlay;
 
         int packedLight;
 
