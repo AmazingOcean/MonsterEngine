@@ -49,16 +49,6 @@ public class KarkenAnimatedModel {
 
     private final ResourceLocation TEXTURE_RESOURCE_LOCATION = new ResourceLocation(MonsterEngine.MOD_ID, "textures/entity/player.png");
 
-    public static LayerDefinition createBodyLayer() {
-        MeshDefinition meshDefinition = new MeshDefinition();
-        PartDefinition root = meshDefinition.getRoot();
-        root.addOrReplaceChild("ball",
-                CubeListBuilder.create().addBox(-4, 0, -4, 8, 8, 8),
-                PartPose.offset(0, 16, 0)
-        );
-        return LayerDefinition.create(meshDefinition, 32, 16);
-    }
-
     /**
      * render
      */
@@ -75,9 +65,9 @@ public class KarkenAnimatedModel {
     public void renderBone(KarkenPoseStack poseStack, KarkenAnimatedBone animatedBone, Properties properties) {
         poseStack.pushPose();
         // 平移到局部部件原点
-        poseStack.translate(animatedBone.getPosition().negationX().multiply(MathHelper.DEFAULT_SCALE_F));
+        poseStack.translate(animatedBone.getPosition().clone().negationX().multiply(MathHelper.DEFAULT_SCALE_F));
         // 再次平移到pivot点
-        poseStack.translate(animatedBone.getPivot().multiply(MathHelper.DEFAULT_SCALE_F));
+        poseStack.translate(animatedBone.getPivot().clone().multiply(MathHelper.DEFAULT_SCALE_F));
         // 旋转
         if (animatedBone.getRotation().getZ() != 0f)
             poseStack.mulPose(animatedBone.getRotation().axisRotationZ());
@@ -89,7 +79,7 @@ public class KarkenAnimatedModel {
         // 缩放模型矩阵
         poseStack.scale(animatedBone.getScale());
         // 平移回来
-        poseStack.translate(animatedBone.getPivot().negation().multiply(MathHelper.DEFAULT_SCALE_F));
+        poseStack.translate(animatedBone.getPivot().clone().negation().multiply(MathHelper.DEFAULT_SCALE_F));
         // 渲染矩形
         for (KarkenAnimatedCube animatedCube : animatedBone.getCubes()) {
             poseStack.pushPose();
@@ -108,21 +98,20 @@ public class KarkenAnimatedModel {
 
         System.out.println(animatedCube);
         // 平移到立方体的位置
-        poseStack.translate(animatedCube.getPivot().multiply(MathHelper.DEFAULT_SCALE_F));
+        poseStack.translate(animatedCube.getPivot().clone().multiply(MathHelper.DEFAULT_SCALE_F));
         // 处理旋转
-        KarkenVector3f rotation = animatedCube.getRotation();
+        KarkenVector3f rotation = animatedCube.getRotation().clone();
         poseStack.mulPose(rotation.rotationXYZ(0, 0, rotation.getZ()));
         poseStack.mulPose(rotation.rotationXYZ(0, rotation.getY(), 0));
         poseStack.mulPose(rotation.rotationXYZ(rotation.getX(), 0, 0));
         // 平移回来
-        poseStack.translate(animatedCube.getPivot().negation().multiply(MathHelper.DEFAULT_SCALE_F));
+        poseStack.translate(animatedCube.getPivot().clone().negation().multiply(MathHelper.DEFAULT_SCALE_F));
         KarkenMatrix3f normalisedPoseState = poseStack.last().getNormal();
         KarkenMatrix4f poseState = poseStack.last().getPose().clone();
         for (Map.Entry<Direction, KarkenQuad> entry : animatedCube.getKarkenQuads().entrySet()) {
-            Direction direction = entry.getKey();
             KarkenQuad value = entry.getValue();
             KarkenVector3f normal = normalisedPoseState.transform(value.getNormal().clone());
-            normal.fixInvertedFlatCube(animatedCube, normal);
+            normal.fixInvertedFlatCube(animatedCube);
             renderQuad(value, poseState, normal, properties);
         }
 

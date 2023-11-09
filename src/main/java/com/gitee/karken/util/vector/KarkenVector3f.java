@@ -37,7 +37,7 @@ public class KarkenVector3f extends AbstractKarkenVector<Float> {
     }
 
     public KarkenVector3f withRadians() {
-        return new KarkenVector3f((float) Math.toRadians(getX()), (float) Math.toRadians(getY()), (float) Math.toRadians(getZ()));
+        return new KarkenVector3f(Math.toRadians(getX()), Math.toRadians(getY()), Math.toRadians(getZ()));
     }
 
     public KarkenVector3f withLerp(KarkenVector3f end, float delta) {
@@ -49,19 +49,19 @@ public class KarkenVector3f extends AbstractKarkenVector<Float> {
     }
 
     public KarkenVector3f negation() {
-        return new KarkenVector3f(-getX(), -getY(), -getZ());
+        return multiply(-1,-1,-1);
     }
 
     public KarkenVector3f negationX() {
-        return new KarkenVector3f(Float.valueOf(-getX()), getY(), getZ());
+        return this.multiply(-1,1,1);
     }
 
     public KarkenVector3f negationY() {
-        return new KarkenVector3f(getX(), Float.valueOf(-getY()), getZ());
+        return this.multiply(1,-1,1);
     }
 
     public KarkenVector3f negationZ() {
-        return new KarkenVector3f(getX(), getY(), Float.valueOf(-getZ()));
+        return this.multiply(1,1,-1);
     }
 
     public KarkenVector3f scale(float scale) {
@@ -86,7 +86,14 @@ public class KarkenVector3f extends AbstractKarkenVector<Float> {
 
     @Override
     public KarkenVector3f multiply(Float scale) {
-        return new KarkenVector3f(getX() * scale, getY() * scale, getZ() * scale);
+        return multiply(scale,scale,scale);
+    }
+
+    public KarkenVector3f multiply(float x,float y,float z) {
+        this.x *= x;
+        this.y *= y;
+        this.z *= z;
+        return this;
     }
 
     public KarkenVector3d getKarkenVector3d() {
@@ -99,26 +106,30 @@ public class KarkenVector3f extends AbstractKarkenVector<Float> {
 
     @Override
     public KarkenVector3f division(Float scale) {
-        return new KarkenVector3f(getX() / scale, getY() / scale, getZ() / scale);
+        return division(scale,scale,scale);
     }
-
+    public KarkenVector3f division(float x,float y,float z) {
+        this.x /= x;
+        this.y /= y;
+        this.z /= z;
+        return this;
+    }
     /**
      * 修正光照问题
      *
      * @param cube
-     * @param normal
      * @return
      */
-    public KarkenVector3f fixInvertedFlatCube(KarkenAnimatedCube cube, KarkenVector3f normal) {
-        if (normal.getX() < 0 && (cube.getSize().getY() == 0 || cube.getSize().getZ() == 0))
-            normal.negationX();
+    public KarkenVector3f fixInvertedFlatCube(KarkenAnimatedCube cube) {
+        if (getX() < 0 && (cube.getSize().getY() == 0 || cube.getSize().getZ() == 0))
+            this.negationX();
 
-        if (normal.getY() < 0 && (cube.getSize().getX() == 0 || cube.getSize().getZ() == 0))
-            normal.negationY();
+        if (getY() < 0 && (cube.getSize().getX() == 0 || cube.getSize().getZ() == 0))
+            this.negationY();
 
-        if (normal.getZ() < 0 && (cube.getSize().getX() == 0 || cube.getSize().getY() == 0))
-            normal.negationZ();
-        return normal;
+        if (getZ() < 0 && (cube.getSize().getX() == 0 || cube.getSize().getY() == 0))
+            this.negationZ();
+        return this;
     }
 
     public boolean isZero() {
