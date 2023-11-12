@@ -10,7 +10,8 @@ import com.google.gson.JsonObject;
 
 public class KarkenJson {
 
-    public static Gson GSON = new GsonBuilder().create();
+    public static Gson GSON = new GsonBuilder()
+            .create();
 
     public static KarkenJsonElement parseJson(String json) {
         return new KarkenJsonElement(GSON.fromJson(json, JsonObject.class));

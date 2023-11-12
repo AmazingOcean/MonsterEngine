@@ -8,20 +8,20 @@ public class JsonAnimatedDescription implements AnimatedDescription {
 
     private String identifier;
 
-    private double textureWeight;
+    private double textureWidth;
 
     private double textureHeight;
 
 
     public JsonAnimatedDescription(KarkenJsonObject object) {
         this.identifier = object.getString("identifier");
-        this.textureWeight = object.getDouble("texture_width");
+        this.textureWidth = object.getDouble("texture_width");
         this.textureHeight = object.getDouble("texture_height");
     }
 
     @Override
-    public double textureWeight() {
-        return textureWeight;
+    public double textureWidth() {
+        return textureWidth;
     }
 
     @Override
@@ -38,7 +38,7 @@ public class JsonAnimatedDescription implements AnimatedDescription {
     public String toString() {
         return "JsonAnimatedDescription{" +
                 "identifier='" + identifier + '\'' +
-                ", textureWeight=" + textureWeight +
+                ", textureWidth=" + textureWidth +
                 ", textureHeight=" + textureHeight +
                 '}';
     }

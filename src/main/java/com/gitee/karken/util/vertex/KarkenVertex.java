@@ -14,6 +14,10 @@ public class KarkenVertex {
         this.position = position;
     }
 
+    public KarkenVertex(double x, double y, double z, double u, double v) {
+        this(new KarkenVector3d(x, y, z), new AnimatedUV.Box(u, v));
+    }
+
     public KarkenVertex(KarkenVector3d position, AnimatedUV.Box animatedUV) {
         this.position = position;
         this.animatedUV = animatedUV;
@@ -33,6 +37,14 @@ public class KarkenVertex {
 
     public void setAnimatedUV(AnimatedUV.Box animatedUV) {
         this.animatedUV = animatedUV;
+    }
+
+    public KarkenVertex remap(float u,float v) {
+        return withTexture(u, v);
+    }
+
+    public KarkenVertex remap(double u,double v) {
+        return withTexture((float) u, (float) v);
     }
 
     public KarkenVertex withTexture(float u, float v) {

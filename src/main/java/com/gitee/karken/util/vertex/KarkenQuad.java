@@ -1,10 +1,14 @@
 package com.gitee.karken.util.vertex;
 
 import com.gitee.karken.core.player.serializer.AnimatedCube;
+import com.gitee.karken.core.player.serializer.AnimatedDescription;
 import com.gitee.karken.core.player.serializer.AnimatedUV;
+import com.gitee.karken.util.KarkenJson;
 import com.gitee.karken.util.vector.KarkenVector3d;
 import com.gitee.karken.util.vector.KarkenVector3f;
+import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.core.Direction;
+import org.joml.Vector3f;
 
 import java.util.Arrays;
 
@@ -57,67 +61,43 @@ public class KarkenQuad {
         this.direction = direction;
     }
 
-    public static float DEFAULT_TEXTURE_WEIGHT = 256;
-
-    public static float DEFAULT_TEXTURE_HEIGHT = 256;
-
-    public static KarkenQuad build(KarkenVertexSet vertexSet, AnimatedCube cube, Direction direction) {
-        // 渲染盒子块
-        AnimatedUV uv = cube.uv();
-        if (uv instanceof AnimatedUV.Box) {
-            return buildBox(vertexSet, cube, direction);
-        }
-        // 渲染自定义模型
-        else {
-            AnimatedUV.Quad animatedUV = (AnimatedUV.Quad) uv;
-            AnimatedUV.Texture texture = animatedUV.getTexture(direction);
-            if (texture == null) {
-                return null;
-            }
-            return build(vertexSet.getFaceByDirection(direction), texture);
-        }
+    public static KarkenVertexSet.Face buildFace(Direction direction, KarkenVertex[] vertices) {
+        return new KarkenVertexSet.Face(direction, vertices);
     }
 
-    public static KarkenQuad buildBox(KarkenVertexSet vertexSet, AnimatedCube cube, Direction direction) {
-        AnimatedUV.Texture animatedTexture = getAnimatedTexture(cube.size().floor(), (AnimatedUV.Box) cube.uv(), direction);
-        KarkenVertexSet.Face face = vertexSet.getFaceByDirection(direction);
-        return build(face, animatedTexture);
+    public static KarkenQuad build(AnimatedDescription description, KarkenVertexSet.Face face, AnimatedUV.Texture animatedUV) {
+        KarkenVertex[] vertices = face.getVertices();
+        float textureWidth = (float) description.textureWidth();
+        float textureHeight = (float) description.textureHeight();
+        float textureAdjustU = 0.0F / textureWidth;
+        float textureAdjustV = 0.0F / textureHeight;
+        double textureStartU = animatedUV.getX();
+        double textureStartV = animatedUV.getY();
+        double textureEndU = animatedUV.getWidth();
+        double textureEndV = animatedUV.getHeight();
+        vertices[0] = vertices[0].remap(textureEndU / textureWidth - textureAdjustU, textureStartV / textureHeight + textureAdjustV);
+        vertices[1] = vertices[1].remap(textureStartU / textureWidth + textureAdjustU, textureStartV / textureHeight + textureAdjustV);
+        vertices[2] = vertices[2].remap(textureStartU / textureWidth + textureAdjustU, textureEndV / textureHeight - textureAdjustV);
+        vertices[3] = vertices[3].remap(textureEndU / textureWidth - textureAdjustU, textureEndV / textureHeight - textureAdjustV);
+//        if (mirror) {
+//            int vertexCount = vertices.length;
+//            for (int i = 0; i < vertexCount / 2; ++i) {
+//                KarkenVertex tempVertex = vertices[i];
+//                vertices[i] = vertices[vertexCount - 1 - i];
+//                vertices[vertexCount - 1 - i] = tempVertex;
+//            }
+//        }
+
+        KarkenVector3f normal = step(face.getDirection());
+//        if (mirror) {
+//            normal = normal.negationX();
+//        }
+        return new KarkenQuad(vertices, normal, face.getDirection());
     }
 
-    public static KarkenQuad build(KarkenVertexSet.Face face, AnimatedUV.Texture animatedUV) {
-        float width = (float) ((animatedUV.getX() + animatedUV.getWidth()) / DEFAULT_TEXTURE_WEIGHT);
-        float height = (float) ((animatedUV.getY() + animatedUV.getHeight()) / DEFAULT_TEXTURE_HEIGHT);
-        float u = (float) (animatedUV.getX() / DEFAULT_TEXTURE_WEIGHT);
-        float v = (float) (animatedUV.getY() / DEFAULT_TEXTURE_HEIGHT);
-        KarkenVector3f normal = new KarkenVector3f(face.getDirection().step());
-        face.getVertices()[0] = face.getVertices()[0].withTexture(u, v);
-        face.getVertices()[1] = face.getVertices()[1].withTexture(width, v);
-        face.getVertices()[2] = face.getVertices()[2].withTexture(width, height);
-        face.getVertices()[3] = face.getVertices()[2].withTexture(u, height);
-        return new KarkenQuad(face.getVertices(), normal, face.getDirection());
-    }
-
-    public static AnimatedUV.Texture getAnimatedTexture(KarkenVector3d size, AnimatedUV.Box box, Direction direction) {
-        double ux = box.getX();
-        double uy = box.getY();
-
-        return switch (direction) {
-            case UP -> new AnimatedUV.Texture(ux + size.getZ(), uy, size.getX(), size.getZ());
-
-            case DOWN ->
-                    new AnimatedUV.Texture(ux + size.getZ() + size.getX(), uy + size.getZ(), size.getX(), size.getZ());
-
-            case WEST ->
-                    new AnimatedUV.Texture(ux + size.getZ() + size.getX(), uy + size.getZ(), size.getZ(), size.getY());
-
-            case EAST -> new AnimatedUV.Texture(ux, uy + size.getZ(), size.getZ(), size.getY());
-
-            case NORTH -> new AnimatedUV.Texture(ux + size.getZ(), uy + size.getZ(), size.getX(), size.getY());
-
-            case SOUTH ->
-                    new AnimatedUV.Texture(ux + size.getZ() + size.getX() + size.getZ(), uy + size.getZ(), size.getX(), size.getY());
-
-        };
+    public static KarkenVector3f step(Direction direction) {
+        Vector3f step = direction.step();
+        return new KarkenVector3f(step.x, step.y, step.z);
     }
 
     @Override

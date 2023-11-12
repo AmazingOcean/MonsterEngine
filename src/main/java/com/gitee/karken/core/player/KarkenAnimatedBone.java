@@ -4,6 +4,8 @@ import com.gitee.karken.core.player.serializer.AnimatedBone;
 import com.gitee.karken.util.vector.KarkenVector3d;
 import com.gitee.karken.util.vector.KarkenVector3f;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import net.minecraft.client.model.geom.ModelPart;
 
 import java.util.List;
 
@@ -13,9 +15,9 @@ public class KarkenAnimatedBone {
 
     private String parent;
 
-    private KarkenVector3f rotation;
+    private KarkenVector3f rotation = new KarkenVector3f(0f,0f,0f);
 
-    private KarkenVector3f pivot;
+    private KarkenVector3f pivot = new KarkenVector3f(0f,0f,0f);;
 
     private KarkenVector3f position = new KarkenVector3f(0f, 0f, 0f);
 
@@ -25,6 +27,8 @@ public class KarkenAnimatedBone {
     private List<KarkenAnimatedBone> children = Lists.newArrayList();
 
     private List<KarkenAnimatedCube> cubes = Lists.newArrayList();
+
+    private ModelPart minecraftModelPart;
 
     private float inflation;
 
@@ -97,6 +101,7 @@ public class KarkenAnimatedBone {
     public void setInflation(float inflation) {
         this.inflation = inflation;
     }
+
 
     @Override
     public String toString() {

@@ -1,14 +1,16 @@
 package com.gitee.karken.util.vector;
 
 import com.gitee.karken.core.player.KarkenAnimatedCube;
-import com.gitee.karken.core.player.serializer.AnimatedCube;
 import com.gitee.karken.util.MathHelper;
 import com.mojang.math.Axis;
+import net.minecraft.world.phys.Vec3;
 import org.joml.Math;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 public class KarkenVector3f extends AbstractKarkenVector<Float> {
+
+    public static KarkenVector3f ZERO = new KarkenVector3f(0f, 0f, 0f);
 
     public KarkenVector3f(Float x, Float y, Float z) {
         super(x, y, z);
@@ -37,7 +39,7 @@ public class KarkenVector3f extends AbstractKarkenVector<Float> {
     }
 
     public KarkenVector3f withRadians() {
-        return new KarkenVector3f(Math.toRadians(getX()), Math.toRadians(getY()), Math.toRadians(getZ()));
+        return new KarkenVector3f((float) Math.toRadians(getX()), (float) Math.toRadians(getY()), (float) Math.toRadians(getZ()));
     }
 
     public KarkenVector3f withLerp(KarkenVector3f end, float delta) {
@@ -49,27 +51,35 @@ public class KarkenVector3f extends AbstractKarkenVector<Float> {
     }
 
     public KarkenVector3f negation() {
-        return multiply(-1,-1,-1);
+        return new KarkenVector3f(-getX(), -getY(), -getZ());
     }
 
     public KarkenVector3f negationX() {
-        return this.multiply(-1,1,1);
+        return new KarkenVector3f(Float.valueOf(-getX()), getY(), getZ());
+    }
+
+    public float[] toArray() {
+        return new float[]{x, y, z};
     }
 
     public KarkenVector3f negationY() {
-        return this.multiply(1,-1,1);
+        return new KarkenVector3f(getX(), Float.valueOf(-getY()), getZ());
     }
 
     public KarkenVector3f negationZ() {
-        return this.multiply(1,1,-1);
+        return new KarkenVector3f(getX(), getY(), Float.valueOf(-getZ()));
     }
 
     public KarkenVector3f scale(float scale) {
         return this.multiply(scale);
     }
 
-    public Quaternionf rotationXYZ(float angleX, float angleY, float angleZ) {
-        return new Quaternionf().rotationXYZ(angleX, angleY, angleZ);
+    public Quaternionf rotationXYZ() {
+        return new Quaternionf().rotationXYZ(this.x, this.y, this.z);
+    }
+
+    public Quaternionf rotationZYX() {
+        return new Quaternionf().rotationZYX(this.z, this.y, this.x);
     }
 
     public Quaternionf axisRotationX() {
@@ -86,14 +96,7 @@ public class KarkenVector3f extends AbstractKarkenVector<Float> {
 
     @Override
     public KarkenVector3f multiply(Float scale) {
-        return multiply(scale,scale,scale);
-    }
-
-    public KarkenVector3f multiply(float x,float y,float z) {
-        this.x *= x;
-        this.y *= y;
-        this.z *= z;
-        return this;
+        return new KarkenVector3f(getX() * scale, getY() * scale, getZ() * scale);
     }
 
     public KarkenVector3d getKarkenVector3d() {
@@ -106,34 +109,36 @@ public class KarkenVector3f extends AbstractKarkenVector<Float> {
 
     @Override
     public KarkenVector3f division(Float scale) {
-        return division(scale,scale,scale);
+        return new KarkenVector3f(getX() / scale, getY() / scale, getZ() / scale);
     }
-    public KarkenVector3f division(float x,float y,float z) {
-        this.x /= x;
-        this.y /= y;
-        this.z /= z;
-        return this;
+
+    public Vec3 newVec3() {
+        return new Vec3(x, y, z);
     }
+
     /**
      * 修正光照问题
      *
      * @param cube
      * @return
      */
-    public KarkenVector3f fixInvertedFlatCube(KarkenAnimatedCube cube) {
+    public void fixInvertedFlatCube(KarkenAnimatedCube cube) {
         if (getX() < 0 && (cube.getSize().getY() == 0 || cube.getSize().getZ() == 0))
-            this.negationX();
+            x = -x;
 
         if (getY() < 0 && (cube.getSize().getX() == 0 || cube.getSize().getZ() == 0))
-            this.negationY();
+            y = -y;
 
         if (getZ() < 0 && (cube.getSize().getX() == 0 || cube.getSize().getY() == 0))
-            this.negationZ();
-        return this;
+            z = -z;
+    }
+
+    public boolean match(float value) {
+        return this.x == value && this.y == value && this.z == value;
     }
 
     public boolean isZero() {
-        return x == 0f && y == 0f && z == 0f;
+        return match(0f);
     }
 
 }
